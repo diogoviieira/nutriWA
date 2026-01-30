@@ -12,6 +12,6 @@ class CreateAppointmentRequests < ActiveRecord::Migration[7.2]
 
     add_index :appointment_requests, :guest_email
     add_index :appointment_requests, :status
-    add_index :appointment_requests, [:nutritionist_id, :requested_at, :status], name: "idx_requests_on_nutritionist_slot_status"
+    add_index :appointment_requests, [ :nutritionist_id, :requested_at, :status ], name: "idx_requests_on_nutritionist_slot_status"
   end
 end
