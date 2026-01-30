@@ -1,0 +1,3 @@
+  [1m[35m (117.4ms)[0m  [1m[35mCREATE DATABASE "nutri_wa_development" ENCODING = 'unicode'[0m
+  [1m[35m (105.0ms)[0m  [1m[35mCREATE DATABASE "nutri_wa_development" ENCODING = 'unicode'[0m
+  [1m[35m (27.7ms)[0m  [1m[35mCREATE DATABASE "nutri_wa_test" ENCODING = 'unicode'[0m
