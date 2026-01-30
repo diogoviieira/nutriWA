@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  guest_name: MyString
+  guest_email: MyString
+  requested_at: 2026-01-30 22:28:08
+  status: 1
+  nutritionist: one
+
+two:
+  guest_name: MyString
+  guest_email: MyString
+  requested_at: 2026-01-30 22:28:08
+  status: 1
+  nutritionist: two
