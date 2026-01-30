@@ -17,9 +17,11 @@ class Nutritionist < ApplicationRecord
     end
 
     if location.present?
-      results = results.order(
-        Arel.sql("CASE WHEN nutritionists.location ILIKE #{connection.quote("%#{location}%")} THEN 0 ELSE 1 END")
-      )
+      # Order by matching location first, then by name
+      results = results.select("nutritionists.*, CASE WHEN nutritionists.location ILIKE #{connection.quote("%#{location}%")} THEN 0 ELSE 1 END as location_priority")
+                       .order("location_priority, nutritionists.name")
+    else
+      results = results.order(:name)
     end
 
     results
