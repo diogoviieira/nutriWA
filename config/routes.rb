@@ -15,14 +15,13 @@ Rails.application.routes.draw do
 
   # API for React (Nutritionist panel)
   namespace :api do
-    resources :appointment_requests, only: [] do
-      member do
-        patch :accept
-        patch :reject
-      end
-    end
     resources :nutritionists, only: [] do
-      resources :appointment_requests, only: [ :index ]
+      resources :appointment_requests, only: [ :index ] do
+        member do
+          patch :accept
+          patch :reject
+        end
+      end
     end
   end
 end

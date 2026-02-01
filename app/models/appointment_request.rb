@@ -35,7 +35,7 @@ class AppointmentRequest < ApplicationRecord
   def cancel_previous_pending_requests
     AppointmentRequest
       .where(guest_email: guest_email, status: :pending)
-      .update_all(status: :cancelled)
+      .update_all(status: :cancelled, updated_at: Time.current)
   end
 
   # Rule: Accepting a request cancels all other pending requests for same slot
@@ -43,6 +43,6 @@ class AppointmentRequest < ApplicationRecord
     AppointmentRequest
       .where(nutritionist_id: nutritionist_id, requested_at: requested_at, status: :pending)
       .where.not(id: id)
-      .update_all(status: :cancelled)
+      .update_all(status: :cancelled, updated_at: Time.current)
   end
 end
