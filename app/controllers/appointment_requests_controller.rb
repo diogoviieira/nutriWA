@@ -8,6 +8,8 @@ class AppointmentRequestsController < ApplicationController
     else
       redirect_to root_path, alert: @appointment_request.errors.full_messages.join(", ")
     end
+  rescue ActiveRecord::RecordNotUnique
+    redirect_to root_path, alert: "You already have a pending request. Please wait for a response."
   end
 
   private

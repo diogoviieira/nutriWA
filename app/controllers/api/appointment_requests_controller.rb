@@ -12,11 +12,17 @@ module Api
     def accept
       @request.accept!
       render json: request_json(@request)
+    rescue ActiveRecord::RecordNotUnique
+      render json: { error: "This time slot has already been accepted." }, status: :conflict
+    rescue AppointmentRequest::InvalidTransitionError => e
+      render json: { error: e.message }, status: :unprocessable_entity
     end
 
     def reject
       @request.reject!
       render json: request_json(@request)
+    rescue AppointmentRequest::InvalidTransitionError => e
+      render json: { error: e.message }, status: :unprocessable_entity
     end
 
     private

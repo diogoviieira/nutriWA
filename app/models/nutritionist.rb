@@ -35,9 +35,10 @@ class Nutritionist < ApplicationRecord
     results = left_joins(:services).distinct
 
     if query.present?
+      sanitized_query = "%#{sanitize_sql_like(query)}%"
       results = results.where(
         "nutritionists.name ILIKE :q OR services.name ILIKE :q",
-        q: "%#{query}%"
+        q: sanitized_query
       )
     end
 
@@ -55,7 +56,8 @@ class Nutritionist < ApplicationRecord
                          .order("distance, nutritionists.name")
       else
         # Unknown location: exact match first, then alphabetical
-        results = results.select("nutritionists.*, CASE WHEN nutritionists.location ILIKE #{connection.quote("%#{location}%")} THEN 0 ELSE 1 END as location_priority")
+        sanitized_location = "%#{sanitize_sql_like(location)}%"
+        results = results.select("nutritionists.*, CASE WHEN nutritionists.location ILIKE #{connection.quote(sanitized_location)} THEN 0 ELSE 1 END as location_priority")
                          .order("location_priority, nutritionists.name")
       end
     else

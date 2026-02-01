@@ -13,6 +13,8 @@ class AppointmentRequest < ApplicationRecord
 
   # Cancel conflicting requests when this one is accepted
   def accept!
+    raise InvalidTransitionError, "Can only accept pending requests" unless pending?
+
     transaction do
       cancel_conflicting_requests!
       accepted!
@@ -20,8 +22,12 @@ class AppointmentRequest < ApplicationRecord
   end
 
   def reject!
+    raise InvalidTransitionError, "Can only reject pending requests" unless pending?
+
     rejected!
   end
+
+  class InvalidTransitionError < StandardError; end
 
   private
 
