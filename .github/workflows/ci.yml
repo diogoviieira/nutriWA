@@ -18,6 +18,7 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
+          cache-version: 2
 
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager --except EOLRuby
@@ -34,6 +35,7 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
+          cache-version: 2
 
       - name: Scan for security vulnerabilities in JavaScript dependencies
         run: echo "Skipping importmap audit - using React with jsbundling instead"
@@ -49,6 +51,7 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
+          cache-version: 2
 
       - name: Lint code for consistent style
         run: bin/rubocop -f github
@@ -84,6 +87,7 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
+          cache-version: 2
 
       - name: Run tests
         env:
