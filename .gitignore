@@ -1,2 +1,28 @@
+# Secrets - NEVER commit
 config/master.key
-config/master.key
+config/credentials/*.key
+.env
+.env.*
+
+# Runtime files
+/tmp/
+/log/*.log
+/storage/*
+!/storage/.keep
+
+# Dependencies (install locally with bundle install)
+/vendor/bundle/
+
+# Caches
+/tmp/cache/
+.byebug_history
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
