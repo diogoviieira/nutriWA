@@ -1,0 +1,96 @@
+<% content_for :title, "Pending Requests - #{@nutritionist.name}" %>
+
+<div class="container">
+  <%= link_to "← Back to Search", nutritionists_path, class: "btn btn-secondary", style: "margin-bottom: 1.5rem;" %>
+
+  <header class="header">
+    <h1>Pending Appointment Requests</h1>
+    <p><%= @nutritionist.name %> — <%= @nutritionist.location %></p>
+  </header>
+
+  <div id="nutritionist-requests-app"
+       data-nutritionist-id="<%= @nutritionist.id %>"
+       data-api-url="<%= api_nutritionist_appointment_requests_path(@nutritionist) %>">
+    <div class="empty-state">
+      <p>Loading requests...</p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  const container = document.getElementById("nutritionist-requests-app");
+  const nutritionistId = container.dataset.nutritionistId;
+  const apiUrl = container.dataset.apiUrl;
+
+  async function loadRequests() {
+    try {
+      const response = await fetch(apiUrl);
+      const requests = await response.json();
+      renderRequests(requests);
+    } catch (error) {
+      container.innerHTML = '<div class="flash flash-alert">Error loading requests.</div>';
+    }
+  }
+
+  function renderRequests(requests) {
+    if (requests.length === 0) {
+      container.innerHTML = '<div class="empty-state"><p>No pending requests.</p></div>';
+      return;
+    }
+
+    container.innerHTML = requests.map(req => `
+      <article class="nutritionist-card" data-request-id="${req.id}">
+        <div class="nutritionist-info">
+          <h2 class="nutritionist-name">${req.guest_name}</h2>
+          <p class="nutritionist-location">${req.guest_email}</p>
+          <p style="margin-top: 0.5rem; font-weight: 500;">
+            ${new Date(req.requested_at).toLocaleString()}
+          </p>
+        </div>
+        <div class="nutritionist-actions">
+          <button type="button" class="btn btn-success" data-action="accept" data-id="${req.id}">
+            Accept
+          </button>
+          <button type="button" class="btn btn-danger" data-action="reject" data-id="${req.id}">
+            Reject
+          </button>
+        </div>
+      </article>
+    `).join("");
+
+    attachEventListeners();
+  }
+
+  function attachEventListeners() {
+    container.querySelectorAll("[data-action]").forEach(btn => {
+      btn.addEventListener("click", async function() {
+        const action = this.dataset.action;
+        const id = this.dataset.id;
+        const url = `/api/appointment_requests/${id}/${action}`;
+
+        try {
+          const response = await fetch(url, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" }
+          });
+
+          if (response.ok) {
+            const card = container.querySelector(`[data-request-id="${id}"]`);
+            card.remove();
+
+            const remaining = container.querySelectorAll("[data-request-id]");
+            if (remaining.length === 0) {
+              container.innerHTML = '<div class="empty-state"><p>No pending requests.</p></div>';
+            }
+          } else {
+            alert("Action failed. Please try again.");
+          }
+        } catch (error) {
+          alert("Network error. Please try again.");
+        }
+      });
+    });
+  }
+
+  loadRequests();
+</script>

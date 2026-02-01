@@ -1,3 +1,1326 @@
   [1m[35m (117.4ms)[0m  [1m[35mCREATE DATABASE "nutri_wa_development" ENCODING = 'unicode'[0m
   [1m[35m (105.0ms)[0m  [1m[35mCREATE DATABASE "nutri_wa_development" ENCODING = 'unicode'[0m
   [1m[35m (27.7ms)[0m  [1m[35mCREATE DATABASE "nutri_wa_test" ENCODING = 'unicode'[0m
+  [1m[35m (24.1ms)[0m  [1m[35mCREATE DATABASE "nutri_wa_development" ENCODING = 'unicode'[0m
+  [1m[35m (6.5ms)[0m  [1m[35mCREATE DATABASE "nutri_wa_test" ENCODING = 'unicode'[0m
+  [1m[35m (10.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (4.2ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT pg_try_advisory_lock(4770438013006289610)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.8ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (1.0ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-01-30 22:28:58.512361', '2026-01-30 22:28:58.512363') RETURNING "key"[0m
+Migrating to CreateNutritionists (20260130222758)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (5.9ms)[0m  [1m[35mCREATE TABLE "nutritionists" ("id" bigserial primary key, "name" character varying NOT NULL, "location" character varying NOT NULL, "avatar_url" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260130222758') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateServices (20260130222803)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (4.7ms)[0m  [1m[35mCREATE TABLE "services" ("id" bigserial primary key, "name" character varying NOT NULL, "price" decimal(10,2) NOT NULL, "nutritionist_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_b19433005f"
+FOREIGN KEY ("nutritionist_id")
+  REFERENCES "nutritionists" ("id")
+)[0m
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE INDEX "index_services_on_nutritionist_id" ON "services" ("nutritionist_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260130222803') RETURNING "version"[0m
+  [1m[36mTRANSACTION (1.3ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateAppointmentRequests (20260130222808)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (4.3ms)[0m  [1m[35mCREATE TABLE "appointment_requests" ("id" bigserial primary key, "guest_name" character varying NOT NULL, "guest_email" character varying NOT NULL, "requested_at" timestamp(6) NOT NULL, "status" integer DEFAULT 0 NOT NULL, "nutritionist_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_0db193f243"
+FOREIGN KEY ("nutritionist_id")
+  REFERENCES "nutritionists" ("id")
+)[0m
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE INDEX "index_appointment_requests_on_nutritionist_id" ON "appointment_requests" ("nutritionist_id")[0m
+  [1m[35m (2.2ms)[0m  [1m[35mCREATE INDEX "index_appointment_requests_on_guest_email" ON "appointment_requests" ("guest_email")[0m
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE INDEX "index_appointment_requests_on_status" ON "appointment_requests" ("status")[0m
+  [1m[35m (2.2ms)[0m  [1m[35mCREATE INDEX "idx_requests_on_nutritionist_slot_status" ON "appointment_requests" ("nutritionist_id", "requested_at", "status")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260130222808') RETURNING "version"[0m
+  [1m[36mTRANSACTION (2.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_advisory_unlock(4770438013006289610)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mAppointmentRequest Load (0.7ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests"[0m
+  [1m[36mService Load (0.4ms)[0m  [1m[34mSELECT "services".* FROM "services"[0m
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mNutritionist Create (2.0ms)[0m  [1m[32mINSERT INTO "nutritionists" ("name", "location", "avatar_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Maria Silva"], ["location", "Braga"], ["avatar_url", "https://i.pravatar.cc/150?img=1"], ["created_at", "2026-01-30 22:45:40.840365"], ["updated_at", "2026-01-30 22:45:40.840365"]]
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mNutritionist Create (0.8ms)[0m  [1m[32mINSERT INTO "nutritionists" ("name", "location", "avatar_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "João Santos"], ["location", "Porto"], ["avatar_url", "https://i.pravatar.cc/150?img=2"], ["created_at", "2026-01-30 22:45:40.845590"], ["updated_at", "2026-01-30 22:45:40.845590"]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mNutritionist Create (18.8ms)[0m  [1m[32mINSERT INTO "nutritionists" ("name", "location", "avatar_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Ana Costa"], ["location", "Lisboa"], ["avatar_url", nil], ["created_at", "2026-01-30 22:45:40.851953"], ["updated_at", "2026-01-30 22:45:40.851953"]]
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mNutritionist Create (1.0ms)[0m  [1m[32mINSERT INTO "nutritionists" ("name", "location", "avatar_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Pedro Oliveira"], ["location", "Braga"], ["avatar_url", "https://i.pravatar.cc/150?img=3"], ["created_at", "2026-01-30 22:45:40.873008"], ["updated_at", "2026-01-30 22:45:40.873008"]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mNutritionist Create (1.0ms)[0m  [1m[32mINSERT INTO "nutritionists" ("name", "location", "avatar_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Carla Mendes"], ["location", "Coimbra"], ["avatar_url", nil], ["created_at", "2026-01-30 22:45:40.876248"], ["updated_at", "2026-01-30 22:45:40.876248"]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mNutritionist Create (0.9ms)[0m  [1m[32mINSERT INTO "nutritionists" ("name", "location", "avatar_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Rita Ferreira"], ["location", "Porto"], ["avatar_url", "https://i.pravatar.cc/150?img=4"], ["created_at", "2026-01-30 22:45:40.879065"], ["updated_at", "2026-01-30 22:45:40.879065"]]
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (1.6ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Sports Nutrition"], ["price", "62.0"], ["nutritionist_id", 1], ["created_at", "2026-01-30 22:45:40.890337"], ["updated_at", "2026-01-30 22:45:40.890337"]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (1.0ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Weight Management"], ["price", "51.0"], ["nutritionist_id", 1], ["created_at", "2026-01-30 22:45:40.894346"], ["updated_at", "2026-01-30 22:45:40.894346"]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (1.7ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Weight Management"], ["price", "56.0"], ["nutritionist_id", 2], ["created_at", "2026-01-30 22:45:40.897654"], ["updated_at", "2026-01-30 22:45:40.897654"]]
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (1.3ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Sports Nutrition"], ["price", "56.0"], ["nutritionist_id", 2], ["created_at", "2026-01-30 22:45:40.902242"], ["updated_at", "2026-01-30 22:45:40.902242"]]
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (1.3ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Nutritional Plan"], ["price", "52.0"], ["nutritionist_id", 2], ["created_at", "2026-01-30 22:45:40.906488"], ["updated_at", "2026-01-30 22:45:40.906488"]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (0.8ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Sports Nutrition"], ["price", "56.0"], ["nutritionist_id", 3], ["created_at", "2026-01-30 22:45:40.910235"], ["updated_at", "2026-01-30 22:45:40.910235"]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (1.1ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Online Follow-up"], ["price", "34.0"], ["nutritionist_id", 3], ["created_at", "2026-01-30 22:45:40.913199"], ["updated_at", "2026-01-30 22:45:40.913199"]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (0.8ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Sports Nutrition"], ["price", "72.0"], ["nutritionist_id", 4], ["created_at", "2026-01-30 22:45:40.916247"], ["updated_at", "2026-01-30 22:45:40.916247"]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (0.8ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Weight Management"], ["price", "47.0"], ["nutritionist_id", 4], ["created_at", "2026-01-30 22:45:40.918902"], ["updated_at", "2026-01-30 22:45:40.918902"]]
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (1.0ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Online Follow-up"], ["price", "31.0"], ["nutritionist_id", 5], ["created_at", "2026-01-30 22:45:40.921559"], ["updated_at", "2026-01-30 22:45:40.921559"]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (2.4ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Nutritional Plan"], ["price", "66.0"], ["nutritionist_id", 5], ["created_at", "2026-01-30 22:45:40.924306"], ["updated_at", "2026-01-30 22:45:40.924306"]]
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (1.0ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Weight Management"], ["price", "46.0"], ["nutritionist_id", 5], ["created_at", "2026-01-30 22:45:40.929066"], ["updated_at", "2026-01-30 22:45:40.929066"]]
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (1.0ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Online Follow-up"], ["price", "29.0"], ["nutritionist_id", 6], ["created_at", "2026-01-30 22:45:40.932617"], ["updated_at", "2026-01-30 22:45:40.932617"]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (1.8ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Weight Management"], ["price", "57.0"], ["nutritionist_id", 6], ["created_at", "2026-01-30 22:45:40.935355"], ["updated_at", "2026-01-30 22:45:40.935355"]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mService Create (0.9ms)[0m  [1m[32mINSERT INTO "services" ("name", "price", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Nutritional Plan"], ["price", "65.0"], ["nutritionist_id", 6], ["created_at", "2026-01-30 22:45:40.938959"], ["updated_at", "2026-01-30 22:45:40.938959"]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/models/appointment_request.rb:38:in `cancel_previous_pending_requests'
+  [1m[36mAppointmentRequest Update All (0.9ms)[0m  [1m[33mUPDATE "appointment_requests" SET "status" = $1 WHERE "appointment_requests"."guest_email" = $2 AND "appointment_requests"."status" = $3[0m  [["status", 3], ["guest_email", "[FILTERED]"], ["status", 0]]
+  ↳ app/models/appointment_request.rb:38:in `cancel_previous_pending_requests'
+  [1m[36mAppointmentRequest Create (0.5ms)[0m  [1m[32mINSERT INTO "appointment_requests" ("guest_name", "guest_email", "requested_at", "status", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["guest_name", "Carlos Rodrigues"], ["guest_email", "[FILTERED]"], ["requested_at", "2026-02-02 10:00:00"], ["status", 0], ["nutritionist_id", 1], ["created_at", "2026-01-30 22:45:40.945760"], ["updated_at", "2026-01-30 22:45:40.945760"]]
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/models/appointment_request.rb:38:in `cancel_previous_pending_requests'
+  [1m[36mAppointmentRequest Update All (0.8ms)[0m  [1m[33mUPDATE "appointment_requests" SET "status" = $1 WHERE "appointment_requests"."guest_email" = $2 AND "appointment_requests"."status" = $3[0m  [["status", 3], ["guest_email", "[FILTERED]"], ["status", 0]]
+  ↳ app/models/appointment_request.rb:38:in `cancel_previous_pending_requests'
+  [1m[36mAppointmentRequest Create (0.4ms)[0m  [1m[32mINSERT INTO "appointment_requests" ("guest_name", "guest_email", "requested_at", "status", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["guest_name", "Sofia Alves"], ["guest_email", "[FILTERED]"], ["requested_at", "2026-02-04 14:30:00"], ["status", 0], ["nutritionist_id", 1], ["created_at", "2026-01-30 22:45:40.951176"], ["updated_at", "2026-01-30 22:45:40.951176"]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/models/appointment_request.rb:38:in `cancel_previous_pending_requests'
+  [1m[36mAppointmentRequest Update All (0.5ms)[0m  [1m[33mUPDATE "appointment_requests" SET "status" = $1 WHERE "appointment_requests"."guest_email" = $2 AND "appointment_requests"."status" = $3[0m  [["status", 3], ["guest_email", "[FILTERED]"], ["status", 0]]
+  ↳ app/models/appointment_request.rb:38:in `cancel_previous_pending_requests'
+  [1m[36mAppointmentRequest Create (0.2ms)[0m  [1m[32mINSERT INTO "appointment_requests" ("guest_name", "guest_email", "requested_at", "status", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["guest_name", "Miguel Pereira"], ["guest_email", "[FILTERED]"], ["requested_at", "2026-02-03 11:00:00"], ["status", 0], ["nutritionist_id", 2], ["created_at", "2026-01-30 22:45:40.954924"], ["updated_at", "2026-01-30 22:45:40.954924"]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mNutritionist Count (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "nutritionists"[0m
+  [1m[36mService Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "services"[0m
+  [1m[36mAppointmentRequest Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "appointment_requests"[0m
+  [1m[36mNutritionist Pluck (0.7ms)[0m  [1m[34mSELECT DISTINCT "nutritionists"."name", "nutritionists"."location" FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" WHERE (nutritionists.name ILIKE $1 OR services.name ILIKE $2) ORDER BY CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END[0m  [[nil, "%Online%"], [nil, "%Online%"]]
+  [1m[36mNutritionist Load (1.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" WHERE (nutritionists.name ILIKE $1 OR services.name ILIKE $2) ORDER BY location_priority, nutritionists.name[0m  [[nil, "%Online%"], [nil, "%Online%"]]
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" INNER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" WHERE (services.name ILIKE $1)[0m  [[nil, "%Online%"]]
+  [1m[36mNutritionist Load (0.8ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1[0m  [["LIMIT", 5]]
+Started GET "/" for 127.0.0.1 at 2026-02-01 18:15:13 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (3.4ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (1.2ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.6ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.5ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 73.6ms | GC: 6.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 280.7ms | GC: 30.7ms)
+Completed 200 OK in 330ms (Views: 269.6ms | ActiveRecord: 19.5ms (4 queries, 0 cached) | GC: 31.2ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:15:14 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.2ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 1.2ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/?id=b9abe6cd-5b62-454d-b07c-98c9b1d8d036&vscodeBrowserReqId=1769969726862" for 127.0.0.1 at 2026-02-01 18:15:27 +0000
+Processing by NutritionistsController#index as HTML
+  Parameters: {"id"=>"b9abe6cd-5b62-454d-b07c-98c9b1d8d036", "vscodeBrowserReqId"=>"1769969726862"}
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (1.4ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.5ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.5ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 12.0ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 13.3ms | GC: 0.3ms)
+Completed 200 OK in 15ms (Views: 11.1ms | ActiveRecord: 2.8ms (4 queries, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/nutritionists/1/requests?id=b9abe6cd-5b62-454d-b07c-98c9b1d8d036&vscodeBrowserReqId=1769969737031" for 127.0.0.1 at 2026-02-01 18:15:37 +0000
+Processing by NutritionistsController#requests as HTML
+  Parameters: {"id"=>"1", "vscodeBrowserReqId"=>"1769969737031"}
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/nutritionists_controller.rb:16:in `requests'
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/requests.html.erb within layouts/application
+  Rendered nutritionists/requests.html.erb within layouts/application (Duration: 0.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.2ms | GC: 0.0ms)
+Completed 200 OK in 8ms (Views: 2.6ms | ActiveRecord: 0.6ms (1 query, 0 cached) | GC: 0.5ms)
+
+
+  [1m[36mAppointmentRequest Count (1.9ms)[0m  [1m[34mSELECT COUNT(*) FROM "appointment_requests" WHERE "appointment_requests"."status" = $1 AND "appointment_requests"."nutritionist_id" = $2[0m  [["status", 0], ["nutritionist_id", 1]]
+Started GET "/" for 127.0.0.1 at 2026-02-01 18:18:54 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (2.4ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.5ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.5ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.5ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 88.0ms | GC: 30.1ms)
+  Rendered layout layouts/application.html.erb (Duration: 135.0ms | GC: 31.4ms)
+Completed 200 OK in 175ms (Views: 126.1ms | ActiveRecord: 19.7ms (4 queries, 0 cached) | GC: 36.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:18:55 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.2ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists?query=&location=Porto&commit=Search" for 127.0.0.1 at 2026-02-01 18:18:59 +0000
+Processing by NutritionistsController#index as HTML
+  Parameters: {"query"=>"", "location"=>"Porto", "commit"=>"Search"}
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Porto%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Porto%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Porto%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.2ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 2], ["nutritionist_id", 6], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 1], ["nutritionist_id", 4]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 13.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 14.6ms | GC: 0.0ms)
+Completed 200 OK in 16ms (Views: 13.5ms | ActiveRecord: 1.4ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:18:59 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 5.1ms | GC: 4.8ms)
+Completed 200 OK in 6ms (Views: 5.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 4.8ms)
+
+
+Started POST "/appointment_requests" for 127.0.0.1 at 2026-02-01 18:19:20 +0000
+Processing by AppointmentRequestsController#create as HTML
+  Parameters: {"authenticity_token"=>"[FILTERED]", "nutritionist_id"=>"2", "appointment_request"=>{"guest_name"=>"DIogo", "guest_email"=>"[FILTERED]", "requested_at"=>"2026-02-11T18:00"}, "commit"=>"Request Appointment"}
+  [1m[36mNutritionist Load (0.2ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/appointment_requests_controller.rb:3:in `create'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/models/appointment_request.rb:38:in `cancel_previous_pending_requests'
+  [1m[36mAppointmentRequest Update All (1.6ms)[0m  [1m[33mUPDATE "appointment_requests" SET "status" = $1 WHERE "appointment_requests"."guest_email" = $2 AND "appointment_requests"."status" = $3[0m  [["status", 3], ["guest_email", "[FILTERED]"], ["status", 0]]
+  ↳ app/models/appointment_request.rb:38:in `cancel_previous_pending_requests'
+  [1m[36mAppointmentRequest Create (0.9ms)[0m  [1m[32mINSERT INTO "appointment_requests" ("guest_name", "guest_email", "requested_at", "status", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["guest_name", "DIogo"], ["guest_email", "[FILTERED]"], ["requested_at", "2026-02-11 18:00:00"], ["status", 0], ["nutritionist_id", 2], ["created_at", "2026-02-01 18:19:20.374269"], ["updated_at", "2026-02-01 18:19:20.374269"]]
+  ↳ app/controllers/appointment_requests_controller.rb:6:in `create'
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/appointment_requests_controller.rb:6:in `create'
+Redirected to http://127.0.0.1:3000/
+Completed 302 Found in 12ms (ActiveRecord: 3.8ms (3 queries, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-02-01 18:19:20 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.9ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.6ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.6ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.3ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 9.6ms | GC: 0.4ms)
+  Rendered layout layouts/application.html.erb (Duration: 10.7ms | GC: 0.4ms)
+Completed 200 OK in 11ms (Views: 8.7ms | ActiveRecord: 2.2ms (4 queries, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:19:20 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists/1/requests" for 127.0.0.1 at 2026-02-01 18:20:00 +0000
+Processing by NutritionistsController#requests as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mNutritionist Load (0.2ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/nutritionists_controller.rb:16:in `requests'
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/requests.html.erb within layouts/application
+  Rendered nutritionists/requests.html.erb within layouts/application (Duration: 0.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.8ms | GC: 0.0ms)
+Completed 200 OK in 5ms (Views: 2.1ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/api/nutritionists/1/appointment_requests" for 127.0.0.1 at 2026-02-01 18:20:00 +0000
+Processing by Api::AppointmentRequestsController#index as */*
+  Parameters: {"nutritionist_id"=>"1"}
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:00 +0000
+  [1m[36mNutritionist Load (1.4ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:6:in `index'
+  [1m[36mAppointmentRequest Load (0.7ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."nutritionist_id" = $1 AND "appointment_requests"."status" = $2 ORDER BY "appointment_requests"."requested_at" ASC[0m  [["nutritionist_id", 1], ["status", 0]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:9:in `map'
+Completed 200 OK in 7ms (Views: 0.3ms | ActiveRecord: 1.9ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.2ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists" for 127.0.0.1 at 2026-02-01 18:20:03 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.3ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 7.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.7ms | GC: 0.0ms)
+Completed 200 OK in 9ms (Views: 7.3ms | ActiveRecord: 1.7ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:03 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists/3/requests" for 127.0.0.1 at 2026-02-01 18:20:04 +0000
+Processing by NutritionistsController#requests as HTML
+  Parameters: {"id"=>"3"}
+  [1m[36mNutritionist Load (0.5ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/nutritionists_controller.rb:16:in `requests'
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/requests.html.erb within layouts/application
+  Rendered nutritionists/requests.html.erb within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.7ms | GC: 0.0ms)
+Completed 200 OK in 4ms (Views: 2.0ms | ActiveRecord: 0.5ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/nutritionists/3/appointment_requests" for 127.0.0.1 at 2026-02-01 18:20:04 +0000
+Processing by Api::AppointmentRequestsController#index as */*
+  Parameters: {"nutritionist_id"=>"3"}
+  [1m[36mNutritionist Load (0.5ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:6:in `index'
+  [1m[36mAppointmentRequest Load (0.3ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."nutritionist_id" = $1 AND "appointment_requests"."status" = $2 ORDER BY "appointment_requests"."requested_at" ASC[0m  [["nutritionist_id", 3], ["status", 0]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:9:in `map'
+Completed 200 OK in 4ms (Views: 0.1ms | ActiveRecord: 0.7ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:04 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 0ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists" for 127.0.0.1 at 2026-02-01 18:20:05 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.3ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 7.9ms | GC: 0.8ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.7ms | GC: 0.8ms)
+Completed 200 OK in 9ms (Views: 7.5ms | ActiveRecord: 1.4ms (4 queries, 0 cached) | GC: 0.8ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:05 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists/4/requests" for 127.0.0.1 at 2026-02-01 18:20:06 +0000
+Processing by NutritionistsController#requests as HTML
+  Parameters: {"id"=>"4"}
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/nutritionists_controller.rb:16:in `requests'
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/requests.html.erb within layouts/application
+  Rendered nutritionists/requests.html.erb within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.6ms | GC: 0.2ms)
+Completed 200 OK in 3ms (Views: 1.8ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.2ms)
+
+
+Started GET "/api/nutritionists/4/appointment_requests" for 127.0.0.1 at 2026-02-01 18:20:07 +0000
+Processing by Api::AppointmentRequestsController#index as */*
+  Parameters: {"nutritionist_id"=>"4"}
+  [1m[36mNutritionist Load (0.2ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:6:in `index'
+  [1m[36mAppointmentRequest Load (0.4ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."nutritionist_id" = $1 AND "appointment_requests"."status" = $2 ORDER BY "appointment_requests"."requested_at" ASC[0m  [["nutritionist_id", 4], ["status", 0]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:9:in `map'
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.6ms (2 queries, 0 cached) | GC: 0.2ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:07 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists" for 127.0.0.1 at 2026-02-01 18:20:07 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.2ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 7.3ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.4ms | GC: 0.4ms)
+Completed 200 OK in 9ms (Views: 7.4ms | ActiveRecord: 1.3ms (4 queries, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:07 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 0ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists/2/requests" for 127.0.0.1 at 2026-02-01 18:20:09 +0000
+Processing by NutritionistsController#requests as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mNutritionist Load (0.4ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/nutritionists_controller.rb:16:in `requests'
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/requests.html.erb within layouts/application
+  Rendered nutritionists/requests.html.erb within layouts/application (Duration: 0.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.5ms | GC: 0.0ms)
+Completed 200 OK in 4ms (Views: 1.9ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/api/nutritionists/2/appointment_requests" for 127.0.0.1 at 2026-02-01 18:20:09 +0000
+Processing by Api::AppointmentRequestsController#index as */*
+  Parameters: {"nutritionist_id"=>"2"}
+  [1m[36mNutritionist Load (0.4ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:6:in `index'
+  [1m[36mAppointmentRequest Load (0.4ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."nutritionist_id" = $1 AND "appointment_requests"."status" = $2 ORDER BY "appointment_requests"."requested_at" ASC[0m  [["nutritionist_id", 2], ["status", 0]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:9:in `map'
+Completed 200 OK in 4ms (Views: 0.2ms | ActiveRecord: 0.7ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:09 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists" for 127.0.0.1 at 2026-02-01 18:20:10 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.5ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.3ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 8.3ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.2ms | GC: 0.3ms)
+Completed 200 OK in 10ms (Views: 7.9ms | ActiveRecord: 1.6ms (4 queries, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:10 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists/6/requests" for 127.0.0.1 at 2026-02-01 18:20:12 +0000
+Processing by NutritionistsController#requests as HTML
+  Parameters: {"id"=>"6"}
+  [1m[36mNutritionist Load (0.2ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 6], ["LIMIT", 1]]
+  ↳ app/controllers/nutritionists_controller.rb:16:in `requests'
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/requests.html.erb within layouts/application
+  Rendered nutritionists/requests.html.erb within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.3ms | GC: 0.0ms)
+Completed 200 OK in 3ms (Views: 1.6ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/nutritionists/6/appointment_requests" for 127.0.0.1 at 2026-02-01 18:20:12 +0000
+Processing by Api::AppointmentRequestsController#index as */*
+  Parameters: {"nutritionist_id"=>"6"}
+  [1m[36mNutritionist Load (0.2ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 6], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:6:in `index'
+  [1m[36mAppointmentRequest Load (0.4ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."nutritionist_id" = $1 AND "appointment_requests"."status" = $2 ORDER BY "appointment_requests"."requested_at" ASC[0m  [["nutritionist_id", 6], ["status", 0]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:9:in `map'
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.6ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:12 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists" for 127.0.0.1 at 2026-02-01 18:20:13 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.3ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 8.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.6ms | GC: 0.0ms)
+Completed 200 OK in 10ms (Views: 8.2ms | ActiveRecord: 1.7ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:13 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists/6/requests" for 127.0.0.1 at 2026-02-01 18:20:16 +0000
+Processing by NutritionistsController#requests as HTML
+  Parameters: {"id"=>"6"}
+  [1m[36mNutritionist Load (0.1ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 6], ["LIMIT", 1]]
+  ↳ app/controllers/nutritionists_controller.rb:16:in `requests'
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/requests.html.erb within layouts/application
+  Rendered nutritionists/requests.html.erb within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.4ms | GC: 0.0ms)
+Completed 200 OK in 3ms (Views: 1.7ms | ActiveRecord: 0.1ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/nutritionists/6/appointment_requests" for 127.0.0.1 at 2026-02-01 18:20:16 +0000
+Processing by Api::AppointmentRequestsController#index as */*
+  Parameters: {"nutritionist_id"=>"6"}
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 6], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:6:in `index'
+  [1m[36mAppointmentRequest Load (0.3ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."nutritionist_id" = $1 AND "appointment_requests"."status" = $2 ORDER BY "appointment_requests"."requested_at" ASC[0m  [["nutritionist_id", 6], ["status", 0]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:9:in `map'
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.5ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:16 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists" for 127.0.0.1 at 2026-02-01 18:20:17 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.5ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.5ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.6ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 8.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.7ms | GC: 0.0ms)
+Completed 200 OK in 11ms (Views: 8.0ms | ActiveRecord: 2.1ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:17 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists/2/requests" for 127.0.0.1 at 2026-02-01 18:20:19 +0000
+Processing by NutritionistsController#requests as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mNutritionist Load (0.2ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/nutritionists_controller.rb:16:in `requests'
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/requests.html.erb within layouts/application
+  Rendered nutritionists/requests.html.erb within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.2ms | GC: 0.0ms)
+Completed 200 OK in 3ms (Views: 1.5ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/nutritionists/2/appointment_requests" for 127.0.0.1 at 2026-02-01 18:20:19 +0000
+Processing by Api::AppointmentRequestsController#index as */*
+  Parameters: {"nutritionist_id"=>"2"}
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:6:in `index'
+  [1m[36mAppointmentRequest Load (0.3ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."nutritionist_id" = $1 AND "appointment_requests"."status" = $2 ORDER BY "appointment_requests"."requested_at" ASC[0m  [["nutritionist_id", 2], ["status", 0]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:9:in `map'
+Completed 200 OK in 5ms (Views: 0.2ms | ActiveRecord: 0.6ms (2 queries, 0 cached) | GC: 1.2ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:19 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.2ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists/1/requests" for 127.0.0.1 at 2026-02-01 18:20:26 +0000
+Processing by NutritionistsController#requests as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mNutritionist Load (0.2ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/nutritionists_controller.rb:16:in `requests'
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/requests.html.erb within layouts/application
+  Rendered nutritionists/requests.html.erb within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.6ms | GC: 0.3ms)
+Completed 200 OK in 3ms (Views: 1.9ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/api/nutritionists/1/appointment_requests" for 127.0.0.1 at 2026-02-01 18:20:26 +0000
+Processing by Api::AppointmentRequestsController#index as */*
+  Parameters: {"nutritionist_id"=>"1"}
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:6:in `index'
+  [1m[36mAppointmentRequest Load (0.5ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."nutritionist_id" = $1 AND "appointment_requests"."status" = $2 ORDER BY "appointment_requests"."requested_at" ASC[0m  [["nutritionist_id", 1], ["status", 0]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:9:in `map'
+Completed 200 OK in 4ms (Views: 0.2ms | ActiveRecord: 0.8ms (2 queries, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:26 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 1.1ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started PATCH "/api/appointment_requests/1/accept" for 127.0.0.1 at 2026-02-01 18:20:37 +0000
+Processing by Api::AppointmentRequestsController#accept as */*
+  Parameters: {"id"=>"1", "appointment_request"=>{}}
+  [1m[36mAppointmentRequest Load (0.2ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:13:in `accept'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/models/appointment_request.rb:46:in `cancel_conflicting_requests!'
+  [1m[36mAppointmentRequest Update All (0.9ms)[0m  [1m[33mUPDATE "appointment_requests" SET "status" = $1 WHERE "appointment_requests"."nutritionist_id" = $2 AND "appointment_requests"."requested_at" = $3 AND "appointment_requests"."status" = $4 AND "appointment_requests"."id" != $5[0m  [["status", 3], ["nutritionist_id", 1], ["requested_at", "2026-02-02 10:00:00"], ["status", 0], ["id", 1]]
+  ↳ app/models/appointment_request.rb:46:in `cancel_conflicting_requests!'
+  [1m[36mAppointmentRequest Update (0.2ms)[0m  [1m[33mUPDATE "appointment_requests" SET "status" = $1, "updated_at" = $2 WHERE "appointment_requests"."id" = $3[0m  [["status", 1], ["updated_at", "2026-02-01 18:20:37.729248"], ["id", 1]]
+  ↳ app/models/appointment_request.rb:18:in `block in accept!'
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/models/appointment_request.rb:16:in `accept!'
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 2.8ms (3 queries, 0 cached) | GC: 0.2ms)
+
+
+Started PATCH "/api/appointment_requests/2/accept" for 127.0.0.1 at 2026-02-01 18:20:47 +0000
+Processing by Api::AppointmentRequestsController#accept as */*
+  Parameters: {"id"=>"2", "appointment_request"=>{}}
+  [1m[36mAppointmentRequest Load (0.2ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:13:in `accept'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/models/appointment_request.rb:46:in `cancel_conflicting_requests!'
+  [1m[36mAppointmentRequest Update All (0.6ms)[0m  [1m[33mUPDATE "appointment_requests" SET "status" = $1 WHERE "appointment_requests"."nutritionist_id" = $2 AND "appointment_requests"."requested_at" = $3 AND "appointment_requests"."status" = $4 AND "appointment_requests"."id" != $5[0m  [["status", 3], ["nutritionist_id", 1], ["requested_at", "2026-02-04 14:30:00"], ["status", 0], ["id", 2]]
+  ↳ app/models/appointment_request.rb:46:in `cancel_conflicting_requests!'
+  [1m[36mAppointmentRequest Update (0.3ms)[0m  [1m[33mUPDATE "appointment_requests" SET "status" = $1, "updated_at" = $2 WHERE "appointment_requests"."id" = $3[0m  [["status", 1], ["updated_at", "2026-02-01 18:20:47.999717"], ["id", 2]]
+  ↳ app/models/appointment_request.rb:18:in `block in accept!'
+  [1m[36mTRANSACTION (2.5ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/models/appointment_request.rb:16:in `accept!'
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 3.7ms (3 queries, 0 cached) | GC: 0.2ms)
+
+
+Started GET "/nutritionists" for 127.0.0.1 at 2026-02-01 18:20:48 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.5ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.5ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.3ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 9.8ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 10.7ms | GC: 0.3ms)
+Completed 200 OK in 12ms (Views: 9.4ms | ActiveRecord: 1.7ms (4 queries, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:48 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 0ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists/1/requests" for 127.0.0.1 at 2026-02-01 18:20:51 +0000
+Processing by NutritionistsController#requests as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mNutritionist Load (0.2ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/nutritionists_controller.rb:16:in `requests'
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/requests.html.erb within layouts/application
+  Rendered nutritionists/requests.html.erb within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.2ms | GC: 0.0ms)
+Completed 200 OK in 3ms (Views: 1.4ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/nutritionists/1/appointment_requests" for 127.0.0.1 at 2026-02-01 18:20:51 +0000
+Processing by Api::AppointmentRequestsController#index as */*
+  Parameters: {"nutritionist_id"=>"1"}
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:6:in `index'
+  [1m[36mAppointmentRequest Load (0.3ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."nutritionist_id" = $1 AND "appointment_requests"."status" = $2 ORDER BY "appointment_requests"."requested_at" ASC[0m  [["nutritionist_id", 1], ["status", 0]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:9:in `map'
+Completed 200 OK in 3ms (Views: 0.1ms | ActiveRecord: 0.5ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:51 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists" for 127.0.0.1 at 2026-02-01 18:20:53 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.3ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 7.2ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.0ms | GC: 0.3ms)
+Completed 200 OK in 9ms (Views: 6.9ms | ActiveRecord: 1.4ms (4 queries, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:53 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.6ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.2ms)
+
+
+Started GET "/nutritionists/2/requests" for 127.0.0.1 at 2026-02-01 18:20:56 +0000
+Processing by NutritionistsController#requests as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/nutritionists_controller.rb:16:in `requests'
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/requests.html.erb within layouts/application
+  Rendered nutritionists/requests.html.erb within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.3ms | GC: 0.0ms)
+Completed 200 OK in 3ms (Views: 1.6ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/nutritionists/2/appointment_requests" for 127.0.0.1 at 2026-02-01 18:20:56 +0000
+Processing by Api::AppointmentRequestsController#index as */*
+  Parameters: {"nutritionist_id"=>"2"}
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:6:in `index'
+  [1m[36mAppointmentRequest Load (0.2ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."nutritionist_id" = $1 AND "appointment_requests"."status" = $2 ORDER BY "appointment_requests"."requested_at" ASC[0m  [["nutritionist_id", 2], ["status", 0]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:9:in `map'
+Completed 200 OK in 4ms (Views: 0.2ms | ActiveRecord: 0.5ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:56 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.2ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists" for 127.0.0.1 at 2026-02-01 18:20:59 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.5ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 7.5ms | GC: 0.1ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.6ms | GC: 0.2ms)
+Completed 200 OK in 9ms (Views: 7.2ms | ActiveRecord: 1.6ms (4 queries, 0 cached) | GC: 0.2ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:20:59 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 0ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/appointment_requests" for 127.0.0.1 at 2026-02-01 18:21:26 +0000
+Processing by AppointmentRequestsController#create as HTML
+  Parameters: {"authenticity_token"=>"[FILTERED]", "nutritionist_id"=>"2", "appointment_request"=>{"guest_name"=>"Filipe", "guest_email"=>"[FILTERED]", "requested_at"=>"2026-02-08T18:00"}, "commit"=>"Request Appointment"}
+  [1m[36mNutritionist Load (0.1ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/appointment_requests_controller.rb:3:in `create'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/models/appointment_request.rb:38:in `cancel_previous_pending_requests'
+  [1m[36mAppointmentRequest Update All (0.7ms)[0m  [1m[33mUPDATE "appointment_requests" SET "status" = $1 WHERE "appointment_requests"."guest_email" = $2 AND "appointment_requests"."status" = $3[0m  [["status", 3], ["guest_email", "[FILTERED]"], ["status", 0]]
+  ↳ app/models/appointment_request.rb:38:in `cancel_previous_pending_requests'
+  [1m[36mAppointmentRequest Create (0.3ms)[0m  [1m[32mINSERT INTO "appointment_requests" ("guest_name", "guest_email", "requested_at", "status", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["guest_name", "Filipe"], ["guest_email", "[FILTERED]"], ["requested_at", "2026-02-08 18:00:00"], ["status", 0], ["nutritionist_id", 2], ["created_at", "2026-02-01 18:21:26.199691"], ["updated_at", "2026-02-01 18:21:26.199691"]]
+  ↳ app/controllers/appointment_requests_controller.rb:6:in `create'
+  [1m[36mTRANSACTION (1.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/appointment_requests_controller.rb:6:in `create'
+Redirected to http://127.0.0.1:3000/
+Completed 302 Found in 7ms (ActiveRecord: 2.4ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-02-01 18:21:26 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.3ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 8.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.4ms | GC: 0.0ms)
+Completed 200 OK in 10ms (Views: 8.0ms | ActiveRecord: 1.7ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:21:26 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 0ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists/2/requests" for 127.0.0.1 at 2026-02-01 18:21:29 +0000
+Processing by NutritionistsController#requests as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mNutritionist Load (0.2ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/nutritionists_controller.rb:16:in `requests'
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/requests.html.erb within layouts/application
+  Rendered nutritionists/requests.html.erb within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.3ms | GC: 0.0ms)
+Completed 200 OK in 3ms (Views: 1.5ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/nutritionists/2/appointment_requests" for 127.0.0.1 at 2026-02-01 18:21:29 +0000
+Processing by Api::AppointmentRequestsController#index as */*
+  Parameters: {"nutritionist_id"=>"2"}
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:6:in `index'
+  [1m[36mAppointmentRequest Load (0.3ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."nutritionist_id" = $1 AND "appointment_requests"."status" = $2 ORDER BY "appointment_requests"."requested_at" ASC[0m  [["nutritionist_id", 2], ["status", 0]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:9:in `map'
+Completed 200 OK in 6ms (Views: 0.2ms | ActiveRecord: 0.5ms (2 queries, 0 cached) | GC: 2.2ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:21:29 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.2ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.6ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started PATCH "/api/appointment_requests/3/reject" for 127.0.0.1 at 2026-02-01 18:21:33 +0000
+Processing by Api::AppointmentRequestsController#reject as */*
+  Parameters: {"id"=>"3", "appointment_request"=>{}}
+  [1m[36mAppointmentRequest Load (0.2ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:20:in `reject'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/models/appointment_request.rb:23:in `reject!'
+  [1m[36mAppointmentRequest Update (0.8ms)[0m  [1m[33mUPDATE "appointment_requests" SET "status" = $1, "updated_at" = $2 WHERE "appointment_requests"."id" = $3[0m  [["status", 2], ["updated_at", "2026-02-01 18:21:33.748879"], ["id", 3]]
+  ↳ app/models/appointment_request.rb:23:in `reject!'
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/models/appointment_request.rb:23:in `reject!'
+Completed 200 OK in 5ms (Views: 0.1ms | ActiveRecord: 2.6ms (2 queries, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/nutritionists" for 127.0.0.1 at 2026-02-01 18:21:34 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.4ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 9.7ms | GC: 1.2ms)
+  Rendered layout layouts/application.html.erb (Duration: 10.7ms | GC: 1.2ms)
+Completed 200 OK in 12ms (Views: 9.4ms | ActiveRecord: 1.7ms (4 queries, 0 cached) | GC: 1.2ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:21:34 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.2ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.8ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/appointment_requests" for 127.0.0.1 at 2026-02-01 18:21:53 +0000
+Processing by AppointmentRequestsController#create as HTML
+  Parameters: {"authenticity_token"=>"[FILTERED]", "nutritionist_id"=>"2", "appointment_request"=>{"guest_name"=>"Mafalda", "guest_email"=>"[FILTERED]", "requested_at"=>"2026-02-11T18:00"}, "commit"=>"Request Appointment"}
+  [1m[36mNutritionist Load (0.1ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/appointment_requests_controller.rb:3:in `create'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/models/appointment_request.rb:38:in `cancel_previous_pending_requests'
+  [1m[36mAppointmentRequest Update All (0.6ms)[0m  [1m[33mUPDATE "appointment_requests" SET "status" = $1 WHERE "appointment_requests"."guest_email" = $2 AND "appointment_requests"."status" = $3[0m  [["status", 3], ["guest_email", "[FILTERED]"], ["status", 0]]
+  ↳ app/models/appointment_request.rb:38:in `cancel_previous_pending_requests'
+  [1m[36mAppointmentRequest Create (0.3ms)[0m  [1m[32mINSERT INTO "appointment_requests" ("guest_name", "guest_email", "requested_at", "status", "nutritionist_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["guest_name", "Mafalda"], ["guest_email", "[FILTERED]"], ["requested_at", "2026-02-11 18:00:00"], ["status", 0], ["nutritionist_id", 2], ["created_at", "2026-02-01 18:21:53.969288"], ["updated_at", "2026-02-01 18:21:53.969288"]]
+  ↳ app/controllers/appointment_requests_controller.rb:6:in `create'
+  [1m[36mTRANSACTION (1.4ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/appointment_requests_controller.rb:6:in `create'
+Redirected to http://127.0.0.1:3000/
+Completed 302 Found in 7ms (ActiveRecord: 2.6ms (3 queries, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-02-01 18:21:53 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.4ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 8.9ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 11.0ms | GC: 0.7ms)
+Completed 200 OK in 12ms (Views: 9.9ms | ActiveRecord: 1.5ms (4 queries, 0 cached) | GC: 0.7ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:21:54 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 0ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists/2/requests" for 127.0.0.1 at 2026-02-01 18:21:57 +0000
+Processing by NutritionistsController#requests as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/nutritionists_controller.rb:16:in `requests'
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/requests.html.erb within layouts/application
+  Rendered nutritionists/requests.html.erb within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.3ms | GC: 0.0ms)
+Completed 200 OK in 4ms (Views: 1.5ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/nutritionists/2/appointment_requests" for 127.0.0.1 at 2026-02-01 18:21:57 +0000
+Processing by Api::AppointmentRequestsController#index as */*
+  Parameters: {"nutritionist_id"=>"2"}
+  [1m[36mNutritionist Load (0.2ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:6:in `index'
+  [1m[36mAppointmentRequest Load (0.2ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."nutritionist_id" = $1 AND "appointment_requests"."status" = $2 ORDER BY "appointment_requests"."requested_at" ASC[0m  [["nutritionist_id", 2], ["status", 0]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:9:in `map'
+Completed 200 OK in 3ms (Views: 0.2ms | ActiveRecord: 0.4ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:21:57 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started PATCH "/api/appointment_requests/6/accept" for 127.0.0.1 at 2026-02-01 18:22:01 +0000
+Processing by Api::AppointmentRequestsController#accept as */*
+  Parameters: {"id"=>"6", "appointment_request"=>{}}
+  [1m[36mAppointmentRequest Load (0.2ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."id" = $1 LIMIT $2[0m  [["id", 6], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:13:in `accept'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/models/appointment_request.rb:46:in `cancel_conflicting_requests!'
+  [1m[36mAppointmentRequest Update All (0.7ms)[0m  [1m[33mUPDATE "appointment_requests" SET "status" = $1 WHERE "appointment_requests"."nutritionist_id" = $2 AND "appointment_requests"."requested_at" = $3 AND "appointment_requests"."status" = $4 AND "appointment_requests"."id" != $5[0m  [["status", 3], ["nutritionist_id", 2], ["requested_at", "2026-02-11 18:00:00"], ["status", 0], ["id", 6]]
+  ↳ app/models/appointment_request.rb:46:in `cancel_conflicting_requests!'
+  [1m[36mAppointmentRequest Update (0.2ms)[0m  [1m[33mUPDATE "appointment_requests" SET "status" = $1, "updated_at" = $2 WHERE "appointment_requests"."id" = $3[0m  [["status", 1], ["updated_at", "2026-02-01 18:22:01.196445"], ["id", 6]]
+  ↳ app/models/appointment_request.rb:18:in `block in accept!'
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/models/appointment_request.rb:16:in `accept!'
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 2.7ms (3 queries, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/nutritionists" for 127.0.0.1 at 2026-02-01 18:22:06 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.7ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.5ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.5ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.3ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 8.9ms | GC: 0.4ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.9ms | GC: 0.4ms)
+Completed 200 OK in 11ms (Views: 8.2ms | ActiveRecord: 2.0ms (4 queries, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:22:06 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists/2/requests" for 127.0.0.1 at 2026-02-01 18:22:08 +0000
+Processing by NutritionistsController#requests as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mNutritionist Load (0.4ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/nutritionists_controller.rb:16:in `requests'
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/requests.html.erb within layouts/application
+  Rendered nutritionists/requests.html.erb within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.3ms | GC: 0.0ms)
+Completed 200 OK in 3ms (Views: 1.5ms | ActiveRecord: 0.4ms (1 query, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/api/nutritionists/2/appointment_requests" for 127.0.0.1 at 2026-02-01 18:22:08 +0000
+Processing by Api::AppointmentRequestsController#index as */*
+  Parameters: {"nutritionist_id"=>"2"}
+  [1m[36mNutritionist Load (0.4ms)[0m  [1m[34mSELECT "nutritionists".* FROM "nutritionists" WHERE "nutritionists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:6:in `index'
+  [1m[36mAppointmentRequest Load (0.2ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."nutritionist_id" = $1 AND "appointment_requests"."status" = $2 ORDER BY "appointment_requests"."requested_at" ASC[0m  [["nutritionist_id", 2], ["status", 0]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:9:in `map'
+Completed 200 OK in 3ms (Views: 0.2ms | ActiveRecord: 0.6ms (2 queries, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:22:08 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 0ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started PATCH "/api/appointment_requests/5/reject" for 127.0.0.1 at 2026-02-01 18:22:16 +0000
+Processing by Api::AppointmentRequestsController#reject as */*
+  Parameters: {"id"=>"5", "appointment_request"=>{}}
+  [1m[36mAppointmentRequest Load (0.2ms)[0m  [1m[34mSELECT "appointment_requests".* FROM "appointment_requests" WHERE "appointment_requests"."id" = $1 LIMIT $2[0m  [["id", 5], ["LIMIT", 1]]
+  ↳ app/controllers/api/appointment_requests_controller.rb:20:in `reject'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/models/appointment_request.rb:23:in `reject!'
+  [1m[36mAppointmentRequest Update (1.0ms)[0m  [1m[33mUPDATE "appointment_requests" SET "status" = $1, "updated_at" = $2 WHERE "appointment_requests"."id" = $3[0m  [["status", 2], ["updated_at", "2026-02-01 18:22:16.898015"], ["id", 5]]
+  ↳ app/models/appointment_request.rb:23:in `reject!'
+  [1m[36mTRANSACTION (1.4ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/models/appointment_request.rb:23:in `reject!'
+Completed 200 OK in 5ms (Views: 0.1ms | ActiveRecord: 2.7ms (2 queries, 0 cached) | GC: 0.2ms)
+
+
+Started GET "/nutritionists" for 127.0.0.1 at 2026-02-01 18:22:17 +0000
+Processing by NutritionistsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.9ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.5ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.4ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 9.0ms | GC: 0.1ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.9ms | GC: 0.1ms)
+Completed 200 OK in 11ms (Views: 8.0ms | ActiveRecord: 2.1ms (4 queries, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:22:17 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 0ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists?query=&location=Braga&commit=Search" for 127.0.0.1 at 2026-02-01 18:22:25 +0000
+Processing by NutritionistsController#index as HTML
+  Parameters: {"query"=>"", "location"=>"Braga", "commit"=>"Search"}
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Braga%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.3ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 7.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.3ms | GC: 0.0ms)
+Completed 200 OK in 9ms (Views: 7.1ms | ActiveRecord: 1.5ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:22:25 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 0ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists?query=&location=Lisboa&commit=Search" for 127.0.0.1 at 2026-02-01 18:22:28 +0000
+Processing by NutritionistsController#index as HTML
+  Parameters: {"query"=>"", "location"=>"Lisboa", "commit"=>"Search"}
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Lisboa%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.5ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Lisboa%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Lisboa%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.2ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 7.9ms | GC: 0.7ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.1ms | GC: 0.7ms)
+Completed 200 OK in 10ms (Views: 8.0ms | ActiveRecord: 1.5ms (4 queries, 0 cached) | GC: 0.9ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:22:28 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 0ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists?query=&location=Algarve&commit=Search" for 127.0.0.1 at 2026-02-01 18:22:36 +0000
+Processing by NutritionistsController#index as HTML
+  Parameters: {"query"=>"", "location"=>"Algarve", "commit"=>"Search"}
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Algarve%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Algarve%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Algarve%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.2ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 7.3ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.2ms | GC: 0.3ms)
+Completed 200 OK in 10ms (Views: 7.0ms | ActiveRecord: 1.4ms (4 queries, 0 cached) | GC: 1.1ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:22:36 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists?query=&location=Algarve&commit=Search" for 127.0.0.1 at 2026-02-01 18:22:37 +0000
+Processing by NutritionistsController#index as HTML
+  Parameters: {"query"=>"", "location"=>"Algarve", "commit"=>"Search"}
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Algarve%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Algarve%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Algarve%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.5ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 9.0ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 10.3ms | GC: 0.3ms)
+Completed 200 OK in 11ms (Views: 9.1ms | ActiveRecord: 1.7ms (4 queries, 0 cached) | GC: 0.5ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:22:37 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists?query=&location=Bragan%C3%A7a&commit=Search" for 127.0.0.1 at 2026-02-01 18:22:41 +0000
+Processing by NutritionistsController#index as HTML
+  Parameters: {"query"=>"", "location"=>"Bragança", "commit"=>"Search"}
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (1.3ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Bragança%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Bragança%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Bragança%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.3ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 8.6ms | GC: 0.4ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.6ms | GC: 0.4ms)
+Completed 200 OK in 11ms (Views: 8.1ms | ActiveRecord: 2.3ms (4 queries, 0 cached) | GC: 0.7ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:22:41 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists?query=&location=Bragan%C3%A7a&commit=Search" for 127.0.0.1 at 2026-02-01 18:22:42 +0000
+Processing by NutritionistsController#index as HTML
+  Parameters: {"query"=>"", "location"=>"Bragança", "commit"=>"Search"}
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Bragança%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Bragança%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Bragança%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.3ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 7.6ms | GC: 0.2ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.0ms | GC: 0.4ms)
+Completed 200 OK in 10ms (Views: 7.8ms | ActiveRecord: 1.5ms (4 queries, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:22:42 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 0ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists?query=&location=Bragan%C3%A7a&commit=Search" for 127.0.0.1 at 2026-02-01 18:22:43 +0000
+Processing by NutritionistsController#index as HTML
+  Parameters: {"query"=>"", "location"=>"Bragança", "commit"=>"Search"}
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Bragança%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.4ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Bragança%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.5ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Bragança%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.2ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 7.6ms | GC: 0.3ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.5ms | GC: 0.3ms)
+Completed 200 OK in 10ms (Views: 7.5ms | ActiveRecord: 1.6ms (4 queries, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:22:43 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 0ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists?query=&location=Bragan%C3%A7a&commit=Search" for 127.0.0.1 at 2026-02-01 18:22:48 +0000
+Processing by NutritionistsController#index as HTML
+  Parameters: {"query"=>"", "location"=>"Bragança", "commit"=>"Search"}
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Bragança%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Bragança%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Bragança%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.2ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 2], ["nutritionist_id", 1], ["nutritionist_id", 4], ["nutritionist_id", 6]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 6.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 7.8ms | GC: 0.0ms)
+Completed 200 OK in 8ms (Views: 6.7ms | ActiveRecord: 1.4ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:22:48 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 0ms (Views: 0.3ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/nutritionists?query=&location=Porto&commit=Search" for 127.0.0.1 at 2026-02-01 18:22:54 +0000
+Processing by NutritionistsController#index as HTML
+  Parameters: {"query"=>"", "location"=>"Porto", "commit"=>"Search"}
+  Rendering layout layouts/application.html.erb
+  Rendering nutritionists/index.html.erb within layouts/application
+  [1m[36mNutritionist Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM (SELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Porto%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id") subquery_for_count[0m
+  ↳ app/views/nutritionists/index.html.erb:34
+  [1m[36mNutritionist Exists? (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Porto%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" LIMIT $1 OFFSET $2[0m  [["LIMIT", 1], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:38
+  [1m[36mNutritionist Load (0.3ms)[0m  [1m[34mSELECT DISTINCT nutritionists.*, CASE WHEN nutritionists.location ILIKE '%Porto%' THEN 0 ELSE 1 END as location_priority FROM "nutritionists" LEFT OUTER JOIN "services" ON "services"."nutritionist_id" = "nutritionists"."id" ORDER BY location_priority, nutritionists.name LIMIT $1 OFFSET $2[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  [1m[36mService Load (0.3ms)[0m  [1m[34mSELECT "services".* FROM "services" WHERE "services"."nutritionist_id" IN ($1, $2, $3, $4, $5, $6)[0m  [["nutritionist_id", 2], ["nutritionist_id", 6], ["nutritionist_id", 3], ["nutritionist_id", 5], ["nutritionist_id", 1], ["nutritionist_id", 4]]
+  ↳ app/views/nutritionists/index.html.erb:39
+  Rendered nutritionists/index.html.erb within layouts/application (Duration: 7.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.8ms | GC: 0.0ms)
+Completed 200 OK in 10ms (Views: 7.7ms | ActiveRecord: 1.5ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/manifest.json" for 127.0.0.1 at 2026-02-01 18:22:55 +0000
+Processing by Rails::PwaController#manifest as JSON
+  Rendering pwa/manifest.json.erb
+  Rendered pwa/manifest.json.erb (Duration: 0.1ms | GC: 0.0ms)
+Completed 200 OK in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+

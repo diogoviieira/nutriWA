@@ -1,0 +1,127 @@
+<% content_for :title, "Find a Nutritionist" %>
+
+<div class="container">
+  <header class="header">
+    <h1>Find a Nutritionist</h1>
+    <p>Search for nutritionists by name, service, or location</p>
+  </header>
+
+  <% if flash[:notice] %>
+    <div class="flash flash-notice"><%= flash[:notice] %></div>
+  <% end %>
+  <% if flash[:alert] %>
+    <div class="flash flash-alert"><%= flash[:alert] %></div>
+  <% end %>
+
+  <%= form_with url: nutritionists_path, method: :get, class: "search-form", data: { turbo: false } do %>
+    <div class="form-row">
+      <div class="form-group">
+        <%= label_tag :query, "Name or Service" %>
+        <%= text_field_tag :query, @query, placeholder: "e.g. Weight Loss, Ana..." %>
+      </div>
+      <div class="form-group">
+        <%= label_tag :location, "Location" %>
+        <%= text_field_tag :location, @location, placeholder: "e.g. Braga, Porto..." %>
+      </div>
+      <div class="form-group" style="display: flex; align-items: flex-end;">
+        <%= submit_tag "Search", class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="results-header">
+    <span class="results-count">
+      <%= @nutritionists.total_count %> nutritionist<%= @nutritionists.total_count == 1 ? "" : "s" %> found
+    </span>
+  </div>
+
+  <% if @nutritionists.any? %>
+    <% @nutritionists.each do |nutritionist| %>
+      <article class="nutritionist-card">
+        <% if nutritionist.avatar_url.present? %>
+          <%= image_tag nutritionist.avatar_url, class: "nutritionist-avatar", alt: nutritionist.name %>
+        <% else %>
+          <div class="nutritionist-avatar"></div>
+        <% end %>
+        <div class="nutritionist-info">
+          <h2 class="nutritionist-name"><%= nutritionist.name %></h2>
+          <p class="nutritionist-location"><%= nutritionist.location %></p>
+          <div class="nutritionist-services">
+            <% nutritionist.services.each do |service| %>
+              <span class="service-tag"><%= service.name %> — €<%= number_with_precision(service.price, precision: 0) %></span>
+            <% end %>
+          </div>
+        </div>
+        <div class="nutritionist-actions">
+          <button type="button" class="btn btn-primary" data-open-modal="<%= nutritionist.id %>">
+            Schedule Appointment
+          </button>
+          <%= link_to "Requests Panel", requests_nutritionist_path(nutritionist), class: "btn btn-secondary" %>
+        </div>
+      </article>
+    <% end %>
+
+    <%= paginate @nutritionists %>
+  <% else %>
+    <div class="empty-state">
+      <p>No nutritionists found matching your criteria.</p>
+      <%= link_to "Clear search", nutritionists_path, class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>
+
+<div class="modal-overlay" id="appointment-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Schedule Appointment</h2>
+      <button type="button" class="modal-close" data-close-modal>&times;</button>
+    </div>
+    <%= form_with model: AppointmentRequest.new, url: appointment_requests_path, local: true do |f| %>
+      <%= hidden_field_tag :nutritionist_id, "", id: "modal-nutritionist-id" %>
+      <div class="modal-body">
+        <div class="form-group">
+          <%= f.label :guest_name, "Your Name" %>
+          <%= f.text_field :guest_name, required: true, placeholder: "John Doe" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :guest_email, "Your Email" %>
+          <%= f.email_field :guest_email, required: true, placeholder: "john@example.com" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :requested_at, "Preferred Date & Time" %>
+          <%= f.datetime_local_field :requested_at, required: true, min: Time.current.strftime("%Y-%m-%dT%H:%M") %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+        <%= f.submit "Request Appointment", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const modal = document.getElementById("appointment-modal");
+    const nutritionistIdField = document.getElementById("modal-nutritionist-id");
+
+    document.querySelectorAll("[data-open-modal]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        nutritionistIdField.value = this.dataset.openModal;
+        modal.classList.add("active");
+      });
+    });
+
+    document.querySelectorAll("[data-close-modal]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        modal.classList.remove("active");
+      });
+    });
+
+    modal.addEventListener("click", function(e) {
+      if (e.target === modal) {
+        modal.classList.remove("active");
+      }
+    });
+  });
+</script>

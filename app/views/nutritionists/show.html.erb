@@ -1,0 +1,102 @@
+<% content_for :title, @nutritionist.name %>
+
+<div class="container">
+  <%= link_to "← Back to Search", nutritionists_path, class: "btn btn-secondary", style: "margin-bottom: 1.5rem;" %>
+
+  <% if flash[:notice] %>
+    <div class="flash flash-notice"><%= flash[:notice] %></div>
+  <% end %>
+  <% if flash[:alert] %>
+    <div class="flash flash-alert"><%= flash[:alert] %></div>
+  <% end %>
+
+  <article class="nutritionist-card" style="flex-direction: column; align-items: center; text-align: center;">
+    <% if @nutritionist.avatar_url.present? %>
+      <%= image_tag @nutritionist.avatar_url, class: "nutritionist-avatar", style: "width: 96px; height: 96px;", alt: @nutritionist.name %>
+    <% else %>
+      <div class="nutritionist-avatar" style="width: 96px; height: 96px;"></div>
+    <% end %>
+    <div class="nutritionist-info" style="text-align: center;">
+      <h1 class="nutritionist-name" style="font-size: 1.5rem;"><%= @nutritionist.name %></h1>
+      <p class="nutritionist-location"><%= @nutritionist.location %></p>
+    </div>
+  </article>
+
+  <h2 style="margin: 2rem 0 1rem; font-size: 1.25rem;">Services Offered</h2>
+
+  <% if @nutritionist.services.any? %>
+    <div style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+      <% @nutritionist.services.each do |service| %>
+        <div class="nutritionist-card" style="flex-direction: column;">
+          <h3 style="font-weight: 600; margin-bottom: 0.5rem;"><%= service.name %></h3>
+          <p style="color: var(--primary); font-weight: 600; font-size: 1.25rem;">
+            €<%= number_with_precision(service.price, precision: 2) %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <p>No services available.</p>
+    </div>
+  <% end %>
+
+  <div style="margin-top: 2rem; text-align: center;">
+    <button type="button" class="btn btn-primary" id="open-appointment-modal">
+      Schedule Appointment
+    </button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="appointment-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Schedule Appointment with <%= @nutritionist.name %></h2>
+      <button type="button" class="modal-close" data-close-modal>&times;</button>
+    </div>
+    <%= form_with model: AppointmentRequest.new, url: appointment_requests_path, local: true do |f| %>
+      <%= hidden_field_tag :nutritionist_id, @nutritionist.id %>
+      <div class="modal-body">
+        <div class="form-group">
+          <%= f.label :guest_name, "Your Name" %>
+          <%= f.text_field :guest_name, required: true, placeholder: "John Doe" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :guest_email, "Your Email" %>
+          <%= f.email_field :guest_email, required: true, placeholder: "john@example.com" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :requested_at, "Preferred Date & Time" %>
+          <%= f.datetime_local_field :requested_at, required: true, min: Time.current.strftime("%Y-%m-%dT%H:%M") %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+        <%= f.submit "Request Appointment", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const modal = document.getElementById("appointment-modal");
+    const openBtn = document.getElementById("open-appointment-modal");
+
+    openBtn.addEventListener("click", function() {
+      modal.classList.add("active");
+    });
+
+    document.querySelectorAll("[data-close-modal]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        modal.classList.remove("active");
+      });
+    });
+
+    modal.addEventListener("click", function(e) {
+      if (e.target === modal) {
+        modal.classList.remove("active");
+      }
+    });
+  });
+</script>
