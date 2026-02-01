@@ -75,13 +75,8 @@
           });
 
           if (response.ok) {
-            const card = container.querySelector(`[data-request-id="${id}"]`);
-            card.remove();
-
-            const remaining = container.querySelectorAll("[data-request-id]");
-            if (remaining.length === 0) {
-              container.innerHTML = '<div class="empty-state"><p>No pending requests.</p></div>';
-            }
+            // Reload the entire list to reflect cancelled conflicts
+            loadRequests();
           } else {
             alert("Action failed. Please try again.");
           }
