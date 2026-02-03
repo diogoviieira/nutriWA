@@ -89,6 +89,18 @@ jobs:
           bundler-cache: true
           cache-version: 2
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: Build JavaScript assets
+        run: npm run build
+
       - name: Run tests
         env:
           RAILS_ENV: test

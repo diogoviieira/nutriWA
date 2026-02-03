@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1>Great news, <%= @appointment_request.guest_name %>!</h1>
+
+    <p>Your appointment request has been <strong>accepted</strong>.</p>
+
+    <h2>Appointment Details</h2>
+    <ul>
+      <li><strong>Nutritionist:</strong> <%= @nutritionist.name %></li>
+      <li><strong>Date:</strong> <%= @appointment_request.requested_at.strftime("%B %d, %Y at %H:%M") %></li>
+      <li><strong>Location:</strong> <%= @nutritionist.location %></li>
+    </ul>
+
+    <p>Please make sure to arrive on time. If you need to cancel or reschedule, please contact us.</p>
+
+    <p>Best regards,<br>The NutriWA Team</p>
+  </body>
+</html>

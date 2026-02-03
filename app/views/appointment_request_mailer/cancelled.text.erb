@@ -1,0 +1,14 @@
+Hello <%= @appointment_request.guest_name %>,
+
+Unfortunately, your appointment request could not be confirmed because the time slot is no longer available.
+
+Request Details:
+- Nutritionist: <%= @nutritionist.name %>
+- Requested Date: <%= @appointment_request.requested_at.strftime("%B %d, %Y at %H:%M") %>
+
+Another guest has already booked this time slot. We encourage you to book a different time or try another nutritionist.
+
+Visit our website to search for nutritionists.
+
+Best regards,
+The NutriWA Team

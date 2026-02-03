@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1>Hello <%= @appointment_request.guest_name %>,</h1>
+
+    <p>Unfortunately, your appointment request has been <strong>declined</strong>.</p>
+
+    <h2>Request Details</h2>
+    <ul>
+      <li><strong>Nutritionist:</strong> <%= @nutritionist.name %></li>
+      <li><strong>Requested Date:</strong> <%= @appointment_request.requested_at.strftime("%B %d, %Y at %H:%M") %></li>
+    </ul>
+
+    <p>We encourage you to book another time slot or try a different nutritionist.</p>
+
+    <p><a href="<%= nutritionists_url %>">Search for nutritionists</a></p>
+
+    <p>Best regards,<br>The NutriWA Team</p>
+  </body>
+</html>

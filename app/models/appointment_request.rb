@@ -19,12 +19,14 @@ class AppointmentRequest < ApplicationRecord
       cancel_conflicting_requests!
       accepted!
     end
+    AppointmentRequestMailer.accepted(self).deliver_later
   end
 
   def reject!
     raise InvalidTransitionError, "Can only reject pending requests" unless pending?
 
     rejected!
+    AppointmentRequestMailer.rejected(self).deliver_later
   end
 
   class InvalidTransitionError < StandardError; end
@@ -46,9 +48,13 @@ class AppointmentRequest < ApplicationRecord
 
   # Rule: Accepting a request cancels all other pending requests for same slot
   def cancel_conflicting_requests!
-    AppointmentRequest
+    conflicting = AppointmentRequest
       .where(nutritionist_id: nutritionist_id, requested_at: requested_at, status: :pending)
       .where.not(id: id)
-      .update_all(status: :cancelled, updated_at: Time.current)
+
+    conflicting.find_each do |request|
+      request.update!(status: :cancelled)
+      AppointmentRequestMailer.cancelled(request).deliver_later
+    end
   end
 end

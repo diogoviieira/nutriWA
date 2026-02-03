@@ -54,6 +54,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Preview emails in browser (web interface works better in WSL)
+  gem "letter_opener_web"
 end
 
 group :test do
@@ -61,3 +64,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "jsbundling-rails", "~> 1.3"

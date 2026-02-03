@@ -1,0 +1,13 @@
+Great news, <%= @appointment_request.guest_name %>!
+
+Your appointment request has been ACCEPTED.
+
+Appointment Details:
+- Nutritionist: <%= @nutritionist.name %>
+- Date: <%= @appointment_request.requested_at.strftime("%B %d, %Y at %H:%M") %>
+- Location: <%= @nutritionist.location %>
+
+Please make sure to arrive on time. If you need to cancel or reschedule, please contact us.
+
+Best regards,
+The NutriWA Team
