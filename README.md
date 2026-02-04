@@ -167,6 +167,12 @@ app/
 
 ---
 
+**Sample data:**  
+6 nutritionists across Portuguese cities. Profile images use pravatar.cc 
+placeholders (some nutritionists have no avatar to simulate real scenarios).
+
+---
+
 ## ⚠️ Known Limitations / Next Steps
 
 **Authentication:**  

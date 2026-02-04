@@ -1,34 +1,97 @@
 import React, { useState, useEffect } from "react";
 
 function RequestCard({ request, onAccept, onReject, loading }) {
-  const formattedDate = new Date(request.requested_at).toLocaleString();
+  const [showModal, setShowModal] = React.useState(false);
+
+  const date = new Date(request.requested_at);
+  const formattedDate = date.toLocaleDateString('en-GB', { 
+    day: 'numeric', 
+    month: 'long', 
+    year: 'numeric' 
+  });
+  const formattedTime = date.toLocaleTimeString('en-US', { 
+    hour: 'numeric', 
+    minute: '2-digit', 
+    hour12: true 
+  });
+
+  const initials = request.guest_name.split(' ')
+    .map(n => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+
+  const handleAccept = () => {
+    setShowModal(false);
+    onAccept(request.id);
+  };
+
+  const handleReject = () => {
+    setShowModal(false);
+    onReject(request.id);
+  };
 
   return (
-    <article className="nutritionist-card">
-      <div className="nutritionist-info">
-        <h2 className="nutritionist-name">{request.guest_name}</h2>
-        <p className="nutritionist-location">{request.guest_email}</p>
-        <p style={{ marginTop: "0.5rem", fontWeight: 500 }}>{formattedDate}</p>
-      </div>
-      <div className="nutritionist-actions">
+    <>
+      <article className="request-card">
+        <div className="request-content">
+          <div className="request-avatar">{initials}</div>
+          <div className="request-details">
+            <h3 className="request-name">{request.guest_name}</h3>
+            <p className="request-meta">Online appointment</p>
+            <div className="request-datetime">
+              <span>📅 {formattedDate}</span>
+              <span>🕒 {formattedTime}</span>
+            </div>
+          </div>
+        </div>
         <button
           type="button"
-          className="btn btn-success"
-          onClick={() => onAccept(request.id)}
+          className="btn-text btn-answer"
+          onClick={() => setShowModal(true)}
           disabled={loading}
         >
-          Accept
+          Answer request
         </button>
-        <button
-          type="button"
-          className="btn btn-danger"
-          onClick={() => onReject(request.id)}
-          disabled={loading}
-        >
-          Reject
-        </button>
-      </div>
-    </article>
+      </article>
+
+      {showModal && (
+        <div className="react-modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="react-modal-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="react-modal-header">
+              <h3>Answer Request</h3>
+              <button 
+                className="react-modal-close" 
+                onClick={() => setShowModal(false)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="react-modal-body">
+              <p>Respond to {request.guest_name}'s appointment request :</p>
+            </div>
+            <div className="react-modal-footer">
+              <button
+                type="button"
+                className="react-btn react-btn-secondary"
+                onClick={handleReject}
+                disabled={loading}
+              >
+                Reject
+              </button>
+              <button
+                type="button"
+                className="react-btn react-btn-primary"
+                onClick={handleAccept}
+                disabled={loading}
+              >
+                Accept
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
