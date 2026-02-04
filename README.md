@@ -128,10 +128,18 @@ bin/rails test test/models/appointment_request_test.rb
 ```
 
 **What's tested:**
-- Model validations (email format, future dates)
-- Business rules: one pending request per guest, conflict cancellation on accept
+
+*Model tests:*
+- Validations (email format, future dates)
+- Business rule: one pending request per guest
+- Business rule: conflict cancellation on accept
 - Mailer deliveries (accepted/rejected/cancelled emails)
-- Email content assertions
+
+*Controller tests:*
+- Nutritionists index (search, location filter, pagination)
+- Appointment requests creation (valid/invalid params)
+- API endpoints (accept/reject with JSON responses)
+- Error handling (invalid transitions, conflicts)
 
 **CI Pipeline (GitHub Actions):**
 - Security scan (Brakeman)
@@ -139,7 +147,7 @@ bin/rails test test/models/appointment_request_test.rb
 - Test suite execution (Minitest + PostgreSQL)
 
 **Current stats:**  
-9 tests, 39 assertions, 0 failures
+30 tests, 84 assertions, 0 failures
 
 ---
 
