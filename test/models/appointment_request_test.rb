@@ -211,12 +211,12 @@ class AppointmentRequestTest < ActiveSupport::TestCase
 
     assert_equal "pending", first_request.status
 
-    # Creating second request should send cancellation email for first
+    # Creating second request with same email should send cancellation for first
     assert_enqueued_emails 1 do
       AppointmentRequest.create!(
         nutritionist: @nutritionist,
         guest_name: "Second Guest",
-        guest_email: "first@example.com",  # Same email
+        guest_email: "first@example.com",  # Same guest email triggers cancellation
         requested_at: 3.days.from_now
       )
     end

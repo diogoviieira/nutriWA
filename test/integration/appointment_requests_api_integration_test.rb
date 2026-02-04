@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ApiAppointmentRequestsTest < ActionDispatch::IntegrationTest
+class AppointmentRequestsApiIntegrationTest < ActionDispatch::IntegrationTest
   def setup
     @nutritionist = Nutritionist.create!(
       name: "Test Nutritionist",
