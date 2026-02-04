@@ -1,12 +1,16 @@
+# Dependabot disabled for this challenge project
+# Uncomment below to re-enable automatic dependency updates
+
 version: 2
-updates:
-- package-ecosystem: bundler
-  directory: "/"
-  schedule:
-    interval: daily
-  open-pull-requests-limit: 10
-- package-ecosystem: github-actions
-  directory: "/"
-  schedule:
-    interval: daily
-  open-pull-requests-limit: 10
+updates: []
+
+# - package-ecosystem: bundler
+#   directory: "/"
+#   schedule:
+#     interval: weekly
+#   open-pull-requests-limit: 5
+# - package-ecosystem: github-actions
+#   directory: "/"
+#   schedule:
+#     interval: weekly
+#   open-pull-requests-limit: 5
