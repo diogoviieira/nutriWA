@@ -168,29 +168,34 @@ app/
 ---
 
 **Sample data:**  
-6 nutritionists across Portuguese cities. Profile images use pravatar.cc 
-placeholders (some nutritionists have no avatar to simulate real scenarios).
+6 nutritionists across Portuguese cities. Profile images use pravatar.cc placeholders.
 
 ---
 
-## ⚠️ Known Limitations / Next Steps
+## ⚠️ Known Limitations & Production Considerations
 
-**Authentication:**  
-No login system. Nutritionists access their panel via direct URL (`/nutritionists/:id/requests`).
+### **Authentication & Authorization** (Critical)
+No login system implemented. Nutritionists access panels via direct URL (`/nutritionists/:id/requests`). Anyone with a nutritionist ID can accept/reject requests.
 
-**Background jobs:**  
-Emails use `deliver_later` with default ActiveJob adapter (async in-process).
+**Production requirement:** Implement authentication (Devise, JWT) with proper authorization checks. See [SECURITY.md](SECURITY.md) for details.
 
-**Distance calculation:**  
-Euclidean approximation with hardcoded coordinates. Real app would use PostGIS or geocoding API.
+### **API Security**
+CSRF protection disabled for API endpoints (`protect_from_forgery with: :null_session`). Acceptable for this demo but requires token-based auth in production.
 
-**Pagination:**  
-Requests panel loads all pending requests. Would need pagination.
+### **Rate Limiting**
+No rate limiting on request submissions. Could be abused for spam/DoS.
 
-**Real-time updates:**  
-Nutritionist panel requires manual refresh to see new requests.
+**Production requirement:** Add rack-attack or similar rate limiting middleware.
 
-**Validation gaps:**  
-No prevention of booking slots outside business hours or too far in the future. I would need configurable constraints.
+### **Background Jobs**
+Emails use `deliver_later` with default ActiveJob adapter (async in-process). Works for development but requires Redis/Sidekiq for production reliability.
+
+### **Distance Calculation**
+Euclidean approximation with hardcoded Portuguese city coordinates. Sufficient for this scope but real applications should use PostGIS or geocoding APIs.
+
+### **Real-time Updates**
+Nutritionist panel requires manual refresh to see new requests. Consider ActionCable or polling for production.
+
+For comprehensive security documentation, see [SECURITY.md](SECURITY.md).
 
 ---

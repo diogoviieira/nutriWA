@@ -47,9 +47,11 @@ class Nutritionist < ApplicationRecord
 
       if search_coords
         # Calculate distance using Euclidean approximation (good enough for Portugal)
+        # Use connection.quote to prevent SQL injection
         distance_sql = CITY_COORDINATES.map do |city, coords|
           lat, lon = coords
-          "WHEN LOWER(nutritionists.location) = '#{city}' THEN #{euclidean_distance(search_coords, coords)}"
+          quoted_city = connection.quote(city)
+          "WHEN LOWER(nutritionists.location) = #{quoted_city} THEN #{euclidean_distance(search_coords, coords)}"
         end.join(" ")
 
         results = results.select("nutritionists.*, CASE #{distance_sql} ELSE 9999 END as distance")

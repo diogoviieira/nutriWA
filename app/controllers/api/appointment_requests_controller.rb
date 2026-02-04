@@ -1,4 +1,9 @@
 module Api
+  # SECURITY NOTE: This API endpoint has NO authentication/authorization.
+  # In production, add authentication (e.g., Devise) and verify:
+  #   - Only authenticated nutritionists can access their own requests
+  #   - Consider using token-based auth (JWT) instead of null_session
+  # Current setup allows ANYONE to accept/reject ANY nutritionist's requests.
   class AppointmentRequestsController < ApplicationController
     protect_from_forgery with: :null_session
     before_action :set_nutritionist
