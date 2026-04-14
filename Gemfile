@@ -48,7 +48,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   # Fix minitest version compatibility issue with Rails 7.2
-  gem "minitest", "~> 5.25"
+  gem "minitest", "~> 6.0"
 end
 
 group :development do
